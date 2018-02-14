@@ -6,6 +6,7 @@
     "express": "^4.16.2",
     "nightmare": "^2.10.0",
     "nightmare-download-manager": "^0.2.4",
-    "punycode": "^2.1.0"
+    "punycode": "^2.1.0",
+    "vo": "^4.0.2"
   }
 }
