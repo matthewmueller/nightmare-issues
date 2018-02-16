@@ -1,0 +1,11 @@
+const Nightmare = require('nightmare')
+
+main().catch(console.error)
+
+async function main() {
+  const nightmare = Nightmare({ show: true })
+
+  await nightmare.goto("https://google.com")
+
+  await nightmare.end()
+}
