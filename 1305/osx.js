@@ -1,20 +1,15 @@
 const Nightmare = require('nightmare')
-const Xvfb = require('xvfb')
 
 main().catch(console.error)
 
 // main function
 async function main() {
-  console.time('xvfb')
-  const close = await xvfb()
-  console.timeEnd('xvfb')
   const nightmare = Nightmare()
 
   const [err, title] = await poss(run(nightmare))
   if (err) {
     // cleanup properly
     await nightmare.end()
-    await close()
     throw err
   }
 
@@ -22,7 +17,6 @@ async function main() {
 
   // shut'er down
   await nightmare.end()
-  await close()
 }
 
 // run nightmare
@@ -36,21 +30,6 @@ async function run(nightmare) {
   const title = await nightmare.title()
   console.timeEnd('title')
   return title
-}
-
-// xvvb wrapper
-function xvfb(options) {
-  var xvfb = new Xvfb(options)
-
-  function close() {
-    return new Promise((resolve, reject) => {
-      xvfb.stop(err => (err ? reject(err) : resolve()))
-    })
-  }
-
-  return new Promise((resolve, reject) => {
-    xvfb.start(err => (err ? reject(err) : resolve(close)))
-  })
 }
 
 // try/catch helper
