@@ -4,8 +4,9 @@ const http = require('http')
 
 main().catch(console.error)
 
-function html(body) {
-  return `<!doctype><html><head><meta charset="UTF-8"> </head><body>${body}</body></html>`
+function html(body, head) {
+  return `<!doctype><html><head><meta charset="UTF-8">${head ||
+    ''}</head><body>${body}</body></html>`
 }
 
 async function main() {
@@ -13,18 +14,31 @@ async function main() {
   const server = await Server(app)
 
   app.get('/', (req, res) => {
-    res.send(html(`server response here`))
+    res.send(
+      html(
+        `<h2>hello world</h2>`,
+        `<meta http-equiv="refresh" content="1;url=${server.url}/">`
+      )
+    )
   })
 
   const nightmare = Nightmare({
     loadTimeout: 45 * 1000,
-    waitTimeout: 5 * 1000,
+    waitTimeout: 10 * 1000,
     show: true
   })
 
   await nightmare.goto(server.url, '/')
 
-  // nightmare code here
+  console.log(
+    await nightmare.evaluate(() => document.documentElement.outerHTML)
+  )
+
+  await nightmare.wait(5000)
+
+  console.log(
+    await nightmare.evaluate(() => document.documentElement.outerHTML)
+  )
 
   await nightmare.end()
   await server.close()
@@ -45,4 +59,8 @@ async function Server(handler) {
       return new Promise((res, _rej) => server.close(res))
     }
   }
+}
+
+function sleep(ms) {
+  return new Promise(res => setTimeout(res, ms))
 }

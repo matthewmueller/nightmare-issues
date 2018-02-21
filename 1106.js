@@ -13,7 +13,7 @@ async function main() {
   const server = await Server(app)
 
   app.get('/', (req, res) => {
-    res.send(html(`server response here`))
+    res.send(html(`<h2>hello world</h2>`))
   })
 
   const nightmare = Nightmare({
@@ -25,6 +25,12 @@ async function main() {
   await nightmare.goto(server.url, '/')
 
   // nightmare code here
+  const h2 = await nightmare.evaluate(() => {
+    return document
+      .evaluate('//h2', document, null, XPathResult.ANY_TYPE, null)
+      .iterateNext().textContent
+  })
+  console.log(h2)
 
   await nightmare.end()
   await server.close()

@@ -11,6 +11,7 @@
     "nightmare-download-manager": "^0.2.4",
     "poss": "^3.0.2",
     "punycode": "^2.1.0",
+    "puppeteer": "^1.1.0",
     "superagent": "^3.8.2",
     "vo": "^4.0.2"
   }

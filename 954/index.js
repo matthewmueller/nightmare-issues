@@ -1,6 +1,7 @@
 const Nightmare = require('nightmare')
 const express = require('express')
 const http = require('http')
+const path = require('path')
 
 main().catch(console.error)
 
@@ -17,14 +18,17 @@ async function main() {
   })
 
   const nightmare = Nightmare({
-    loadTimeout: 45 * 1000,
-    waitTimeout: 5 * 1000,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    },
     show: true
   })
 
-  await nightmare.goto(server.url, '/')
+  nightmare.on('console', function() {
+    console.log(arguments)
+  })
 
-  // nightmare code here
+  await nightmare.goto(server.url + '/?key=value')
 
   await nightmare.end()
   await server.close()

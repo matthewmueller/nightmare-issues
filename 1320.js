@@ -5,20 +5,20 @@ main().catch(console.error)
 async function main() {
   // define a new action
   Nightmare.action(
-    'onBeforeSendHeaders',
+    'onBeforeRequest',
     //define the action to run inside Electron
     function(name, options, parent, win, renderer, done) {
-      win.webContents.session.webRequest.onBeforeSendHeaders((details, cb) => {
+      win.webContents.session.webRequest.onBeforeRequest((details, cb) => {
         // call our event handler
-        parent.call('onBeforeSendHeaders', details, res => {
+        parent.call('onBeforeRequest', details, res => {
           res ? cb(Object.assign({}, res)) : cb({ cancel: false })
         })
       })
       done()
     },
     function(handler, done) {
-      // listen for "onBeforeSendHeaders" events
-      this.child.respondTo('onBeforeSendHeaders', handler)
+      // listen for "onBeforeRequest" events
+      this.child.respondTo('onBeforeRequest', handler)
       done()
     }
   )
@@ -26,8 +26,10 @@ async function main() {
   const nightmare = Nightmare({ show: true })
 
   // start listening
-  await nightmare.onBeforeSendHeaders((details, cb) => {
-    console.log(details.headers)
+  await nightmare.onBeforeRequest((details, cb) => {
+    if (details.resourceType === 'image') {
+      return cb({ cancel: true })
+    }
     cb({ cancel: false })
   })
 
