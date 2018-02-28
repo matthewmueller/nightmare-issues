@@ -7,19 +7,19 @@ async function main() {
   assert(process.env.USER, 'missing USER env')
   assert(process.env.PASS, 'missing PASS env')
 
-  // non-working plugin i'm using
-  SessionFlusher(Nightmare)
+  CookieFlusher(Nightmare)
 
   const nightmare = Nightmare({
     show: true,
     webPreferences: {
-      partition: 'persist:nightmare'
+      partition: 'persist:nightmare8'
     },
     paths: {
       userData: process.cwd()
     }
   })
 
+  // console.log(await nightmare.engineVersions())
   await nightmare.goto('https://github.com/segmentio/nightmare')
 
   await nightmare
@@ -33,29 +33,24 @@ async function main() {
     )
     .wait('#user-links')
 
-  await nightmare.flushSession()
-  await sleep(1000)
-
+    
+  await nightmare.flushCookies()
   await nightmare.end()
 }
 
-function sleep(ms) {
-  return new Promise(res => setTimeout(res, ms))
-}
 
 // try to flush the session data
-function SessionFlusher(Nightmare) {
+function CookieFlusher(Nightmare) {
   Nightmare.action(
-    'flushSession',
+    'flushCookies',
     (name, options, parent, win, renderer, done) => {
-      parent.respondTo('flushSession', done => {
-        win.webContents.session.flushStorageData()
-        done()
+      parent.respondTo('flushCookies', done => {
+        win.webContents.session.cookies.flushStore(done)
       })
       done()
     },
     function(done) {
-      this.child.call('flushSession', done)
+      this.child.call('flushCookies', done)
     }
   )
 }

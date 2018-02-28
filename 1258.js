@@ -6,13 +6,11 @@ async function main() {
   Input(Nightmare)
 
   const nightmare = Nightmare({ show: true })
-  // console.log(nightmare._queue = )
 
   await nightmare.goto('https://google.com')
   await nightmare.input('#lst-ib', 'nightmare is')
-  nightmare._queue = []
-  await nightmare.input('#lst-ib', ' awesome')
   await sleep(5000)
+  await nightmare.input('#lst-ib', ' awesome')
   await nightmare.end()
 }
 
