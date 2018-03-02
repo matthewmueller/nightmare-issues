@@ -66,7 +66,7 @@ async function main() {
 
   // wait until all downloads have completed
   await nightmare.waitDownloadsComplete()
-
+  
   // shutdown
   await nightmare.end()
   await server.close()

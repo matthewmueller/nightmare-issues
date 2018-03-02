@@ -7,7 +7,7 @@
     "got": "^8.1.0",
     "mocha": "^5.0.1",
     "moment": "^2.20.1",
-    "nightmare": "^2.10.0",
+    "nightmare": "^3.0.0",
     "nightmare-download-manager": "^0.2.4",
     "poss": "^3.0.2",
     "punycode": "^2.1.0",
